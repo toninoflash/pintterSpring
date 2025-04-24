@@ -1,0 +1,27 @@
+## YAML Template.
+---
+
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+
+server:
+  port:8080
+  
+spring:
+  application:
+    name: apigateway
+  cloud:
+    gateway:
+      routes:
+      - id: user_service
+        uri: lb://businessdomain-userservice
+        predicates:
+        - Path=/api/users/**
+        
+        
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
