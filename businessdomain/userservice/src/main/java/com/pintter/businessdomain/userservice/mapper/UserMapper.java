@@ -7,6 +7,7 @@ package com.pintter.businessdomain.userservice.mapper;
 import com.pintter.businessdomain.userservice.dto.UserDto;
 import com.pintter.businessdomain.userservice.entities.User;
 import java.util.List;
+import java.util.Optional;
 import org.mapstruct.Mapper;
 
 /**
@@ -18,4 +19,7 @@ public interface UserMapper {
     UserDto toDto(User user);
     User toEntity(UserDto userDto);
     List<UserDto> toDtoList(List<User> users);
+    default User toOptional(Optional<User> opt) {
+        return opt.orElse(null); // o lanza una excepción si lo prefieres
+    }
 }

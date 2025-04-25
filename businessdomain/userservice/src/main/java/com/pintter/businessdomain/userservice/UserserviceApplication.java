@@ -15,7 +15,7 @@ public class UserserviceApplication {
 
     @Bean
     @LoadBalanced
-    public WebClient.Builder loadValanceWebClientBuilder() {
+    public WebClient.Builder loadBalanceWebClientBuilder() {
         return WebClient.builder();
     }
 }

@@ -5,6 +5,7 @@
 package com.pintter.businessdomain.userservice.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import lombok.Data;
 
@@ -20,9 +21,11 @@ public class UserDto {
     private String name;
     private String lastname;
     private String bio;
+    private String phone;
+    private String website;
+    private String direction;
     private String avatarUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Set<String> roles;
-    
+    private List<?> artWork;
 }

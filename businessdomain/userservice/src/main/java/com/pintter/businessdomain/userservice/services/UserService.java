@@ -5,7 +5,11 @@
 package com.pintter.businessdomain.userservice.services;
 
 import com.pintter.businessdomain.userservice.dto.UserDto;
+import com.pintter.businessdomain.userservice.entities.User;
+import com.pintter.businessdomain.userservice.exceptions.BusinessRuleException;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 
 /**
@@ -15,9 +19,10 @@ import org.springframework.security.core.Authentication;
 
 public interface UserService {
     List<UserDto> getAllUsers();
-    UserDto getUserById(Long id);
+    Optional<User> getUserById(Long id);
     UserDto getCurrentUser(Authentication auth);
     UserDto createUser(UserDto userDto);
-    UserDto updateUser(Long id, UserDto userDto);
+    UserDto updateUser(Long id, UserDto userDto) throws BusinessRuleException;
     void deleteUser(Long id);
+    UserDto getFull(Long uid) throws BusinessRuleException;
 }

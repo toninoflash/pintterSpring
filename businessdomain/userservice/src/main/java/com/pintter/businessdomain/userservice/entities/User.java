@@ -4,17 +4,11 @@
  */
 package com.pintter.businessdomain.userservice.entities;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -40,14 +34,20 @@ public class User {
     private String bio;
     private String avatarUrl;
 
+    
+    private String phone;
+    private String website;
+    private String direction;
+
+    
     private boolean enabled = true;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles")
-    private Set<String> roles = new HashSet<>();
+    private String role = "USER_ROLE";
 
+    @Transient
+    private List<?> artWork;
     // Getters, Setters, Constructors
 }

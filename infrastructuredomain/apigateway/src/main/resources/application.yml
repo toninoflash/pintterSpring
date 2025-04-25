@@ -19,8 +19,15 @@ spring:
         uri: lb://businessdomain-userservice
         predicates:
         - Path=/api/users/**
-        
-        
+      - id: role_service
+        uri: lb://businessdomain-roles
+        predicates:
+        - Path=/api/role/**
+      - id: artwork_service
+        uri: lb://businessdomain-artworkservice
+        predicates:
+          - Path=/api/artwork/**
+
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
