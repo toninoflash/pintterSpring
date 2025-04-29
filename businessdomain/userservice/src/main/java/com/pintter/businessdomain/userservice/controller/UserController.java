@@ -55,6 +55,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/validate")
+    public ResponseEntity<?> getUserByUsername(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {
+
+        Optional<User> opt = userService.getUserByUsername(username);
+        if (opt.isPresent() && opt.get().getPassword().equals(password)) {
+            return ResponseEntity.status(HttpStatus.OK).body(opt);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(false);
+        }
+    }
+
     @GetMapping("/full/{uid}")
     public ResponseEntity<?> getFull(@PathVariable(name = "uid") Long uid) throws BusinessRuleException {
         UserDto save = userService.getFull(uid);
@@ -62,7 +73,7 @@ public class UserController {
         if (save != null) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
     }
 

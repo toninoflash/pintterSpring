@@ -4,6 +4,7 @@
  */
 package com.pintter.businessdomain.artworkservice.controller;
 
+import com.pintter.businessdomain.artworkservice.common.ArtworkConstants;
 import com.pintter.businessdomain.artworkservice.dto.ArtworkDto;
 import com.pintter.businessdomain.artworkservice.entities.Artwork;
 import com.pintter.businessdomain.artworkservice.exceptions.BusinessRuleException;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +77,9 @@ public class ArtworkController {
     public ResponseEntity<?> createArtwork(@RequestBody ArtworkDto artworkDto) {
         // Convertir DTO a Entidad
         Artwork artwork = artworkMapper.toEntity(artworkDto);
+        artwork.setCreatedAt(LocalDateTime.now());
+        artwork.setUpdateAt(LocalDateTime.now());
+        artwork.setStatus(ArtworkConstants.STATUSES.get(3));
         // Guardar en base de datos
         Artwork savedArtwork = artworkRepository.save(artwork);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArtwork);

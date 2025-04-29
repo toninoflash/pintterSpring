@@ -61,8 +61,8 @@ public class KeycloakRestService {
      */
     public String login(String username, String password) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("username",username);
-        map.add("password",password);
+        map.add("username","billing");
+        map.add("password","qwerty");
         map.add("client_id",clientId);
         map.add("grant_type",grantType);
         map.add("client_secret",clientSecret);

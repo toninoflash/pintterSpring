@@ -7,6 +7,8 @@ package com.pintter.businessdomain.userservice.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+
+import jakarta.persistence.Column;
 import lombok.Data;
 
 /**
@@ -18,6 +20,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
+    private String password;
     private String name;
     private String lastname;
     private String bio;

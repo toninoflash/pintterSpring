@@ -27,7 +27,7 @@ public class ArtworkDto {
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 
-    private Long uid; // Referencia al usuario que subió la obra (desde user-service)
+    private Long uid;
 
     private String category;
     private String status;
