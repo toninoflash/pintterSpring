@@ -38,7 +38,7 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
         List<UserDto> listUserDto = userService.getAllUsers();
         if (listUserDto.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Sin usuarios registrados");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
             return ResponseEntity.ok(listUserDto);
         }
@@ -60,7 +60,7 @@ public class UserController {
         UserDto save = userService.getFull(uid);
 
         if (save != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(save);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

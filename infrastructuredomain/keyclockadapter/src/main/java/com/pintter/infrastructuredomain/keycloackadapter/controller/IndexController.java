@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
  *
  * @author Pc
  */
+@RestController
 public class IndexController {
     private Logger logger = LoggerFactory.getLogger(IndexController.class);
 

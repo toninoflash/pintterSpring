@@ -16,12 +16,13 @@ services:
     image: configserver_image:0.0.1-SNAPSHOT
     environment:
       - EUREKA_SERVER=http://registry-discovery:8761/eureka/
+      - REPOSITORY_PATH=/repo
       - JAVA_OPTS=
          -Xms256M 
          -Xmx256M
-         -DREPOSITORY_PATH=/repo
+
     volumes:
-      - /d/Proyectos/SpringBoot/paymentchainparent/config-server-repo:/repo
+      - /d/Proyectos/RedSocial/Back/Printter/config-server-repo:/repo
     depends_on:
       - registry-discovery
     ports:
@@ -97,7 +98,7 @@ services:
     environment:
       - EUREKA_SERVER=http://registry-discovery:8761/eureka/
       - KEYCLOACK_SERVER=http://keycloak_server:8080/realms/
-      - KEYCLOACK_REAL_ID=UOTF61lV1iVdmFd0mRnDbN_KnVsE8SySZlli0Eqm8_A
+      - KEYCLOACK_REAL_ID=dK2Pg-zTj26_F7uOWMK79ADlsbd7dvjmSiFuO6fKzYo
       - JAVA_OPTS=
          -Xms256M 
          -Xmx256Ms

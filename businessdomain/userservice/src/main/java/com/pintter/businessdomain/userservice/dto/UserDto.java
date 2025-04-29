@@ -27,5 +27,6 @@ public class UserDto {
     private String avatarUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String role;
     private List<?> artWork;
 }

@@ -14,11 +14,23 @@ spring:
     name: apigateway
   cloud:
     gateway:
+      cors-configurations:
+        '[/**]':
+          allowed-origins: "http://localhost:4200" # Solo uno, no múltiples orígenes
+          allowed-methods: "*"
+          allowed-headers: "*"
+          allow-credentials: true
       routes:
+      - id: user_full
+        uri: lb://businessdomain-userservice
+        predicates:
+          - Path=/api/users/full/**
+
       - id: user_service
         uri: lb://businessdomain-userservice
         predicates:
         - Path=/api/users/**
+
       - id: role_service
         uri: lb://businessdomain-roles
         predicates:

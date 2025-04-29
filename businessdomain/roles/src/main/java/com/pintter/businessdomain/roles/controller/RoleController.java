@@ -44,7 +44,7 @@ public class RoleController {
     public ResponseEntity<?> getAllRoles() {
         List<RoleDto> listRoleDto = roleMapper.toDtoList(roleRepository.findAll());
         if (listRoleDto.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Sin usuarios registrados");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
             return ResponseEntity.ok(listRoleDto);
         }

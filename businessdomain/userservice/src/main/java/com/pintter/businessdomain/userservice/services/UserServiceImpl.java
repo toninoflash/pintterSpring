@@ -18,7 +18,6 @@ import com.pintter.businessdomain.userservice.transactions.BusinessTransactions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -55,11 +54,7 @@ public class UserServiceImpl implements UserService {
         return opt;
     }
 
-    @Override
-    public UserDto getCurrentUser(Authentication auth) {
-        // Implementation here
-        return null;
-    }
+
 
     @Override
     public UserDto getFull(Long id) throws BusinessRuleException  {
@@ -67,7 +62,6 @@ public class UserServiceImpl implements UserService {
         Optional<User> optUser = userRepository.findById(id);
         User user = userMapper.toOptional(optUser);
         List<?> artwork = businessTransactions.getTransactions(id);
-        user.setArtWork(artwork);
         if (user != null) {
             UserDto dto = userMapper.toDto(user);
             dto.setArtWork(artwork);
@@ -81,13 +75,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         
-    log.info("CREATE USER INICIADO: " + userDto);
 
         User user = userMapper.toEntity(userDto);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-        log.info("Usuario creado: " + user);
-
+        user.setRole("USER_ROLE");
         user = userRepository.save(user);
         return userMapper.toDto(user);
     }

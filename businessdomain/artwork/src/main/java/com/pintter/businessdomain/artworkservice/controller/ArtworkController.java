@@ -9,12 +9,15 @@ import com.pintter.businessdomain.artworkservice.entities.Artwork;
 import com.pintter.businessdomain.artworkservice.exceptions.BusinessRuleException;
 import com.pintter.businessdomain.artworkservice.mapper.ArtworkMapper;
 import com.pintter.businessdomain.artworkservice.repository.ArtworkRepository;
-import com.pintter.businessdomain.artworkservice.services.ArtworkService;
+import com.pintter.businessdomain.artworkservice.services.IArtworkService;
+import com.pintter.businessdomain.artworkservice.services.ICloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,17 +30,19 @@ import java.util.Optional;
 public class ArtworkController {
 
     @Autowired
-    private ArtworkService artworkService;
+    private IArtworkService artworkService;
     @Autowired
     private ArtworkRepository artworkRepository;
     @Autowired
     private ArtworkMapper artworkMapper;
+    @Autowired
+    private ICloudinaryService cloudinaryService;
 
     @GetMapping
     public ResponseEntity<?> getAllArtworks() {
         List<ArtworkDto> listArtworkDto = artworkMapper.toDtoList(artworkRepository.findAll());
         if (listArtworkDto.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Sin obras registradas");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
             return ResponseEntity.ok(listArtworkDto);
         }
@@ -60,7 +65,7 @@ public class ArtworkController {
         List<ArtworkDto> artworksList = artworkMapper.toDtoList(artworks);
 
         if (artworksList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Sin resultados");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
             return ResponseEntity.ok(artworksList);
         }
@@ -73,6 +78,17 @@ public class ArtworkController {
         // Guardar en base de datos
         Artwork savedArtwork = artworkRepository.save(artwork);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArtwork);
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            String imageUrl = cloudinaryService.uploadFile(file);
+            return ResponseEntity.ok(Collections.singletonMap("url", imageUrl));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error uploading image: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

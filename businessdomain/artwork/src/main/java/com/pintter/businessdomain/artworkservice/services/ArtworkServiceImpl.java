@@ -9,10 +9,10 @@ import com.pintter.businessdomain.artworkservice.entities.Artwork;
 import com.pintter.businessdomain.artworkservice.exceptions.BusinessRuleException;
 import com.pintter.businessdomain.artworkservice.mapper.ArtworkMapper;
 import com.pintter.businessdomain.artworkservice.repository.ArtworkRepository;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +24,14 @@ import java.util.Optional;
  */
 @Service
 @Slf4j
-public class ArtworkServiceImpl implements ArtworkService {
+public class ArtworkServiceImpl implements IArtworkService {
 
     @Autowired
     private ArtworkRepository artworkRepository;
     @Autowired
     private ArtworkMapper artworkMapper;
     // Add any required dependencies here (e.g., repositories, mappers)
-    
-    
+
     @Override
     public List<ArtworkDto> getAllArtworks() {
         // Implementation here
@@ -41,12 +40,6 @@ public class ArtworkServiceImpl implements ArtworkService {
 
     @Override
     public ArtworkDto getArtworkById(Long id) {
-        // Implementation here
-        return null;
-    }
-
-    @Override
-    public ArtworkDto getCurrentArtwork(Authentication auth) {
         // Implementation here
         return null;
     }
@@ -61,17 +54,23 @@ public class ArtworkServiceImpl implements ArtworkService {
     public ArtworkDto updateArtwork(Long id, ArtworkDto artworkDto) throws BusinessRuleException {
         // Implementation here
         Optional<Artwork> opt = artworkRepository.findById(id);
-        log.info("resArtwork:::::::"+opt.get());
+        log.info("resArtwork:::::::" + opt.get());
         Artwork resArtwork = artworkMapper.toOptional(opt);
         if (resArtwork != null) {
             resArtwork.setId(id);
             resArtwork.setTitle(artworkDto.getTitle());
             resArtwork.setDescription(artworkDto.getDescription());
+            resArtwork.setCategory(artworkDto.getCategory());
+            resArtwork.setImageUrl(artworkDto.getImageUrl());
+            resArtwork.setStatus(artworkDto.getStatus());
+            resArtwork.setUid(artworkDto.getUid());
+            resArtwork.setUpdateAt(LocalDateTime.now());
+
         } else {
             BusinessRuleException businessRuleException = new BusinessRuleException("0002", "Error validación. Transacion no localizada. ", HttpStatus.PRECONDITION_FAILED);
             throw businessRuleException;
         }
-        log.info("resArtwork:::::::"+resArtwork);
+        log.info("resArtwork:::::::" + resArtwork);
         ArtworkDto save = artworkMapper.toDto(artworkRepository.save(resArtwork));
         return save;
     }
@@ -80,5 +79,5 @@ public class ArtworkServiceImpl implements ArtworkService {
     public void deleteArtwork(Long id) {
         // Implementation here
     }
-    
+
 }
