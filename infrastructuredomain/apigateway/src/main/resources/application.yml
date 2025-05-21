@@ -25,7 +25,8 @@ spring:
         uri: lb://businessdomain-userservice
         predicates:
           - Path=/api/users/full/**
-
+        filter:
+          - AuthenticationFiltering
       - id: user_service
         uri: lb://businessdomain-userservice
         predicates:
@@ -39,6 +40,14 @@ spring:
         uri: lb://businessdomain-artworkservice
         predicates:
           - Path=/api/artwork/**
+      - id: follower_service
+        uri: lb://businessdomain-follower
+        predicates:
+          - Path=/api/follower/**
+      - id: exhibition_service
+        uri: lb://businessdomain-exhibition
+        predicates:
+          - Path=/api/exhibition/**
 
 logging:
   level:

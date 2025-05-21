@@ -31,7 +31,7 @@ public class SpringSecurity {
         config.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Origen de tu frontend
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
         config.setAllowedHeaders(Arrays.asList("*")); // Permite todos los headers
-        config.setAllowCredentials(false); // Si usas cookies/tokens de autenticación
+        config.setAllowCredentials(true); // Si usas cookies/tokens de autenticación
         config.setMaxAge(3600L); // Tiempo de cache para CORS
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

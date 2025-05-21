@@ -49,5 +49,10 @@ public class User {
 
     @Transient
     private List<?> artWork;
+    @Transient
+    private List<?> follower;
+
+    @Transient
+    private List<?> exhibitions;
     // Getters, Setters, Constructors
 }

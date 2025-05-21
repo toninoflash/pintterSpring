@@ -24,4 +24,5 @@ public interface UserService {
     void deleteUser(Long id);
     UserDto getFull(Long uid) throws BusinessRuleException;
     Optional<User> getUserByUsername(String username);
+    Optional<User> getUserByEmail(String username);
 }

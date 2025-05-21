@@ -17,6 +17,7 @@ import lombok.Data;
  */
 @Data
 public class UserDto {
+
     private Long id;
     private String username;
     private String email;
@@ -32,4 +33,8 @@ public class UserDto {
     private LocalDateTime updatedAt;
     private String role;
     private List<?> artWork;
+    private List<?> follower;
+    private List<?> exhibitions;
+
+
 }

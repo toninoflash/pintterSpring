@@ -4,6 +4,7 @@
  */
 package com.pintter.businessdomain.userservice.controller;
 
+import com.pintter.businessdomain.userservice.dto.FollowerDto;
 import com.pintter.businessdomain.userservice.dto.UserDto;
 import com.pintter.businessdomain.userservice.entities.User;
 import com.pintter.businessdomain.userservice.exceptions.BusinessRuleException;
@@ -13,6 +14,8 @@ import com.pintter.businessdomain.userservice.services.UserService;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,22 +48,28 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable(name = "id") Long id) {
-        
-        Optional<User> opt = userService.getUserById(id);
-        if (opt.isPresent()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(userMapper.toDto(opt.get()));
+    public ResponseEntity<?> getUserById(@PathVariable(name = "id") Long id) throws BusinessRuleException {
+
+        UserDto save = userService.getFull(id);
+
+        if (save != null) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
         } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No existe el usuario");
         }
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<?> getUserByUsername(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {
+    public ResponseEntity<?> getUserByUsername(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws BusinessRuleException {
 
-        Optional<User> opt = userService.getUserByUsername(username);
-        if (opt.isPresent() && opt.get().getPassword().equals(password)) {
-            return ResponseEntity.status(HttpStatus.OK).body(opt);
+        Optional<User> optUsername = userService.getUserByUsername(username);
+        Optional<User> optEmail = userService.getUserByEmail(username);
+        if (optUsername.isPresent() && optUsername.get().getPassword().equals(password)) {
+            UserDto save = userService.getFull(optUsername.get().getId());
+            return ResponseEntity.status(HttpStatus.OK).body(save);
+        }  else if (optEmail.isPresent() && optEmail.get().getPassword().equals(password)) {
+            UserDto save = userService.getFull(optEmail.get().getId());
+            return ResponseEntity.status(HttpStatus.OK).body(save);
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(false);
         }
@@ -76,7 +85,25 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
     }
+    @PostMapping("/followers")
+    public ResponseEntity<?> getFollower(@RequestBody List<FollowerDto> follower) throws BusinessRuleException {
 
+        List<UserDto> userDto = follower.stream()
+                .map(f -> {
+                    try {
+                        return userService.getFull(f.getFollowedId());
+                    } catch (BusinessRuleException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        if (userDto.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No existe el usuario");
+        } else {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(userDto);
+        }
+    }
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDto userDto) throws BusinessRuleException, UnknownHostException {
         // Convertir DTO a Entidad

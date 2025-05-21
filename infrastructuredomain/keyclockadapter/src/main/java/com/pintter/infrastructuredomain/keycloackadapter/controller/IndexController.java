@@ -32,6 +32,9 @@ import org.springframework.http.ResponseEntity;
 public class IndexController {
     private Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    private final String USERNAME = "billing";
+    private final String PASSWORD = "qwerty";
+
     @Autowired
     private KeycloakRestService restService;
 
@@ -68,18 +71,30 @@ public class IndexController {
             throw new BussinesRuleException("01", e.getMessage(),HttpStatus.FORBIDDEN);             
         }
     }
-    
+
     @GetMapping("/valid")
     public ResponseEntity<?> valid(@RequestHeader("Authorization") String authHeader) throws BussinesRuleException {
         try {
-            restService.checkValidity(authHeader);
-            return ResponseEntity.ok(new HashMap (){{
-                put("is_valid", "true");
-            }});
+            String token = authHeader.replace("Bearer", "").trim();
+            DecodedJWT jwt = JWT.decode(token);
+
+            // Verifica la firma del token
+            Jwk jwk = jwtService.getJwk();
+            Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
+            algorithm.verify(jwt);
+
+            // Verifica expiración
+            Date expiryDate = jwt.getExpiresAt();
+            if (expiryDate.before(new Date())) {
+                throw new Exception("Token expired");
+            }
+
+            String login = restService.login(USERNAME, PASSWORD);
+            // Si todo es correcto
+            return ResponseEntity.ok(login);
         } catch (Exception e) {
             logger.error("token is not valid, exception : {} ", e.getMessage());
-           throw new BussinesRuleException("is_valid", "False",HttpStatus.FORBIDDEN);   
-           
+            throw new BussinesRuleException("is_valid", "False", HttpStatus.FORBIDDEN);
         }
     }
 

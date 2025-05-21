@@ -13,6 +13,8 @@
         <module>userservice</module>
         <module>roles</module>
         <module>artwork</module>
+        <module>follower</module>
+        <module>exhibition</module>
     </modules>
     <properties>
         <spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>  

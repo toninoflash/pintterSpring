@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService {
         return opt;
     }
 
+    @Override
+    public Optional<User> getUserByEmail(String username) {
+        Optional<User> opt = userRepository.findByEmail(username);
+        return opt;
+    }
 
 
     @Override
@@ -68,9 +73,13 @@ public class UserServiceImpl implements UserService {
         Optional<User> optUser = userRepository.findById(id);
         User user = userMapper.toOptional(optUser);
         List<?> artwork = businessTransactions.getTransactions(id);
+        List<?> follower = businessTransactions.getFollower(id);
+        List<?> exhibition = businessTransactions.getExhibition(id);
         if (user != null) {
             UserDto dto = userMapper.toDto(user);
             dto.setArtWork(artwork);
+            dto.setFollower(follower);
+            dto.setExhibitions(exhibition);
             return dto;
         } else {
             BusinessRuleException businessRuleException = new BusinessRuleException("0002", "Error validación. Transacion no localizada. ", HttpStatus.PRECONDITION_FAILED);
